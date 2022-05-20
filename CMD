@@ -1,0 +1,11 @@
+[for MAPS6]
+docker build -t chiachin86/maps6-mqtts -f Dockerfile .
+
+docker run -p 8883:8883 -itd --restart unless-stopped \
+--net=host \
+--name maps6_mqtts \
+--mount type=bind,source=/home/pi/MAPS6_PQC/data,destination=/home/MAPS6_MVP/data \
+--mount type=bind,source=/dev,destination=/dev \
+--privileged \
+-e "BROKER_IP=34.215.240.96" -e "PUB_IP=60.250.153.171" \
+chiachin86/maps6-mqtts
