@@ -44,7 +44,7 @@ ARG OPENSSL_BUILD_DEFINES
 ARG KEM_ALG
 
 # Update image and install all prerequisites
-RUN apt update && apt install build-essential vim cmake gcc libtool libssl-dev make ninja-build git doxygen \
+RUN apt-get update && apt install build-essential vim cmake gcc libtool libssl-dev make ninja-build git doxygen \
         libcjson1 libcjson-dev uthash-dev libcunit1-dev libsqlite3-dev xsltproc docbook-xsl -y && apt clean
 
 # Get the fork of OQS-OpenSSL_1_1_1-stable
@@ -68,7 +68,7 @@ RUN ./Configure shared no-asm linux-aarch64 -lm --prefix=$OPENSSL_LIB_PATH/ \
 # Let Mosquitto Client to support KEM algorithm
 RUN CP=`grep "\/\* $KEM_ALG \*\/" /test/kem_list.txt | awk '{print $1}'` && \
     sed -i '/static const uint16_t eccurves_default/a\    '$CP'                      \/\* '$KEM_ALG' \*\/' ssl/t1_lib.c && \
-    make -j$(nproc) && make install && echo "OQS-OpenSSL installed successfully" || exit 1
+    make -j$(nproc) && make install_sw && echo "OQS-OpenSSL installed successfully" || exit 1
 
 # Build and install Mosquitto
 WORKDIR $SOURCE_PATH
